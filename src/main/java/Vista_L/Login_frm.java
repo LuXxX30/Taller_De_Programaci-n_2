@@ -6,6 +6,7 @@ package Vista_L;
 
 import Controlador_L.Control_L;
 import Modelo_L.Login;
+import VistaVendedor.frmVentas;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,9 +22,7 @@ public class Login_frm extends javax.swing.JFrame {
         initComponents();
     }
 
-    private Login_frm(Login vendedor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -155,7 +154,7 @@ public class Login_frm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Bienvenido " + vendedor.getNombre());
             // Abrir la ventana principal de ventas
             //frmVenta inicioVenta = new frmVenta();
-            Login_frm inicioVenta = new Login_frm (vendedor);
+            frmVentas inicioVenta = new frmVentas(vendedor);
             inicioVenta.setVisible(true);
             this.dispose(); // cerrar login
         } else {
@@ -179,7 +178,8 @@ public class Login_frm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Bienvenido " + vendedor.getNombre());
             // Abrir la ventana principal de ventas
             //frmVenta inicioVenta = new frmVenta();
-            Login_frm inicioVenta = new Login_frm(vendedor);
+            // SOLUCIÓN: Llamar correctamente a la pantalla de ventas
+            frmVentas inicioVenta = new frmVentas(vendedor);
             inicioVenta.setVisible(true);
             this.dispose(); // cerrar login
         } else {
@@ -241,4 +241,8 @@ public class Login_frm extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtcontraseña;
     private javax.swing.JTextField txtuser;
     // End of variables declaration//GEN-END:variables
+
+    public String getNombre() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

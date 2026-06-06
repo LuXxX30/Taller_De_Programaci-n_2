@@ -35,7 +35,11 @@
                               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblVendedor" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lblVendedor" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="lblNombreVendedor" min="-2" pref="107" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -67,7 +71,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-              <Component id="lblVendedor" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblVendedor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblNombreVendedor" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -133,6 +140,11 @@
     <Component class="javax.swing.JTextField" name="txtNombreCliente">
     </Component>
     <Component class="javax.swing.JTextField" name="txtApellidoCliente">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblNombreVendedor">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="  "/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

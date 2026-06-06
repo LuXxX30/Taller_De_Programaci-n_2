@@ -50,6 +50,7 @@ public class frmVentas extends javax.swing.JFrame {
         txtIdCliente = new javax.swing.JTextField();
         txtNombreCliente = new javax.swing.JTextField();
         txtApellidoCliente = new javax.swing.JTextField();
+        lblNombreVendedor = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,6 +72,8 @@ public class frmVentas extends javax.swing.JFrame {
 
         jLabel4.setText("Apellidos");
 
+        lblNombreVendedor.setText("  ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,7 +89,10 @@ public class frmVentas extends javax.swing.JFrame {
                                 .addGap(15, 15, 15)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
-                                    .addComponent(lblVendedor)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblVendedor)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lblNombreVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +113,9 @@ public class frmVentas extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(lblVendedor)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVendedor)
+                    .addComponent(lblNombreVendedor))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
@@ -186,6 +194,7 @@ public class frmVentas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblNombreVendedor;
     private javax.swing.JLabel lblVendedor;
     private javax.swing.JTextField txtApellidoCliente;
     private javax.swing.JTextField txtIdCliente;
