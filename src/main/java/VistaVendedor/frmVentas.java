@@ -232,6 +232,7 @@ public class frmVentas extends javax.swing.JFrame {
         jLabel10.setText("Importe:");
 
         txtImporteVenta.setEditable(false);
+        txtImporteVenta.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -343,10 +344,12 @@ public class frmVentas extends javax.swing.JFrame {
         jLabel5.setText("Fecha:");
 
         txtFechaDetalle.setEditable(false);
+        txtFechaDetalle.setEnabled(false);
 
         jLabel12.setText("Total");
 
         txtTotalDetalle.setEditable(false);
+        txtTotalDetalle.setEnabled(false);
         txtTotalDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTotalDetalleActionPerformed(evt);
