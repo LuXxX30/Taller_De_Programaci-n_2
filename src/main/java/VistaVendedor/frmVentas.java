@@ -231,6 +231,8 @@ public class frmVentas extends javax.swing.JFrame {
 
         jLabel10.setText("Importe:");
 
+        txtImporteVenta.setEditable(false);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -340,7 +342,16 @@ public class frmVentas extends javax.swing.JFrame {
 
         jLabel5.setText("Fecha:");
 
+        txtFechaDetalle.setEditable(false);
+
         jLabel12.setText("Total");
+
+        txtTotalDetalle.setEditable(false);
+        txtTotalDetalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTotalDetalleActionPerformed(evt);
+            }
+        });
 
         tblDetalleVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -689,6 +700,10 @@ JOptionPane.showMessageDialog(this, "Error al guardar la venta: " +
 e.getMessage());
 }
     }//GEN-LAST:event_btnRegistrarVentaActionPerformed
+
+    private void txtTotalDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalDetalleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTotalDetalleActionPerformed
 
     /**
      * @param args the command line arguments
