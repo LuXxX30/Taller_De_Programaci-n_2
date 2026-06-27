@@ -10,6 +10,18 @@ import ModeloProductos.Producto;
 import Modelo_L.Login;
 import VistaCliente.frmCliente;
 import VistaProductos.dlgProductos;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Font;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Date;
@@ -17,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,7 +37,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author lusaavedra
  */
-
 public class frmVentas extends javax.swing.JFrame {
 // Declaración de la variable
 
@@ -134,6 +146,7 @@ public class frmVentas extends javax.swing.JFrame {
         btnAgregarVenta = new javax.swing.JButton();
         btnEliminarVenta = new javax.swing.JButton();
         btnRegistrarVenta = new javax.swing.JButton();
+        btnReporte = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -390,6 +403,13 @@ public class frmVentas extends javax.swing.JFrame {
             }
         });
 
+        btnReporte.setText("Reporte");
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -404,13 +424,16 @@ public class frmVentas extends javax.swing.JFrame {
                         .addGap(70, 70, 70)
                         .addComponent(jLabel12))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(txtCodigoDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtFechaDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtTotalDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(txtCodigoDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtFechaDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtTotalDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnReporte))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnAgregarVenta)
@@ -430,7 +453,8 @@ public class frmVentas extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCodigoDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFechaDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTotalDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTotalDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnReporte))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -561,192 +585,278 @@ public class frmVentas extends javax.swing.JFrame {
         modeloDetalle.removeRow(fila);
         totalDetalle -= importe;
         txtTotalDetalle.setText(String.format("%.2f", totalDetalle));
-    
+
     }//GEN-LAST:event_btnEliminarVentaActionPerformed
 
     private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
         // TODO add your handling code here:
         // Validar cliente
-if (txtIdCliente.getText().trim().isEmpty()) {
-JOptionPane.showMessageDialog(this, "Seleccione un cliente.");
-return;
-}
+        if (txtIdCliente.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione un cliente.");
+            return;
+        }
 // Validar que haya productos en la tabla
-if (modeloDetalle.getRowCount() == 0) {
-JOptionPane.showMessageDialog(this, "Agregue al menos un producto a la venta.");
-return;
-}
+        if (modeloDetalle.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Agregue al menos un producto a la venta.");
+            return;
+        }
 // Validar que el total no esté vacío
-if (txtTotalDetalle.getText().trim().isEmpty()) {
-JOptionPane.showMessageDialog(this, "El total no puede estar vacío.");
-return;
-}
-try (Connection conn = ConexionMySQL_L.getConnection()) {
-conn.setAutoCommit(false);
-int numeroFactura = Integer.parseInt(txtCodigoDetalle.getText());
-int idCliente = Integer.parseInt(txtIdCliente.getText());
-int idVendedor = vendedorActual.getId();
-double total = Double.parseDouble(txtTotalDetalle.getText());
+        if (txtTotalDetalle.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El total no puede estar vacío.");
+            return;
+        }
+        try (Connection conn = ConexionMySQL_L.getConnection()) {
+            conn.setAutoCommit(false);
+            int numeroFactura = Integer.parseInt(txtCodigoDetalle.getText());
+            int idCliente = Integer.parseInt(txtIdCliente.getText());
+            int idVendedor = vendedorActual.getId();
+            double total = Double.parseDouble(txtTotalDetalle.getText());
 // 1. Insertar cabecera de la factura
-String sqlCab = "INSERT INTO table_detalle (id_detalle, cliente, fecha,vendedor, totals) VALUES (?, ?, ?, ?, ?)";
-try (PreparedStatement ps = conn.prepareStatement(sqlCab)) {
-ps.setInt(1, numeroFactura);
-ps.setInt(2, idCliente);
-ps.setString(3, txtFechaDetalle.getText());
-ps.setInt(4, idVendedor);
-ps.setDouble(5, total);
-ps.executeUpdate();
-}
+            String sqlCab = "INSERT INTO table_detalle (id_detalle, cliente, fecha,vendedor, totals) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(sqlCab)) {
+                ps.setInt(1, numeroFactura);
+                ps.setInt(2, idCliente);
+                ps.setString(3, txtFechaDetalle.getText());
+                ps.setInt(4, idVendedor);
+                ps.setDouble(5, total);
+                ps.executeUpdate();
+            }
 // 2. Insertar detalles (los que están en la tabla)
-String sqlDet = "INSERT INTO table_ventas (id_detalle, Productos,cantidad, importe) VALUES (?, ?, ?, ?)";
-try (PreparedStatement ps = conn.prepareStatement(sqlDet)) {
-for (int i = 0; i < modeloDetalle.getRowCount(); i++) {
-int idProducto = (int) modeloDetalle.getValueAt(i, 0);
-int cantidad = (int) modeloDetalle.getValueAt(i, 2);
-double importe = (double) modeloDetalle.getValueAt(i, 4);
-ps.setInt(1, numeroFactura);
-ps.setInt(2, idProducto);
-ps.setInt(3, cantidad);
-ps.setDouble(4, importe);
-ps.addBatch();
-}
-ps.executeBatch();
-}
-conn.commit();
-JOptionPane.showMessageDialog(this, "Detalle N° " + numeroFactura +
-" registrada exitosamente.");
+            String sqlDet = "INSERT INTO table_ventas (id_detalle, Productos,cantidad, importe) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(sqlDet)) {
+                for (int i = 0; i < modeloDetalle.getRowCount(); i++) {
+                    int idProducto = (int) modeloDetalle.getValueAt(i, 0);
+                    int cantidad = (int) modeloDetalle.getValueAt(i, 2);
+                    double importe = (double) modeloDetalle.getValueAt(i, 4);
+                    ps.setInt(1, numeroFactura);
+                    ps.setInt(2, idProducto);
+                    ps.setInt(3, cantidad);
+                    ps.setDouble(4, importe);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+            conn.commit();
+            JOptionPane.showMessageDialog(this, "Detalle N° " + numeroFactura
+                    + " registrada exitosamente.");
 // Limpiar para nueva venta
-modeloDetalle.setRowCount(0);
-totalDetalle = 0.0;
-txtTotalDetalle.setText("0.00");
-txtIdCliente.setText("");
-txtNombreCliente.setText("");
-txtApellidoCliente.setText("");
-txtCodigoDetalle.setText(String.valueOf(obtenerSiguienteNumeroFactura())
-);
-txtIdProducto.setText("");
-txtNombreProducto.setText("");
-txtPrecioProducto.setText("");
-spnCantidad.setValue(1);
-txtImporteVenta.setText("0.00");
-} catch (Exception e) {
-e.printStackTrace();
-JOptionPane.showMessageDialog(this, "Error al guardar: " +
-e.getMessage());
-}
+            modeloDetalle.setRowCount(0);
+            totalDetalle = 0.0;
+            txtTotalDetalle.setText("0.00");
+            txtIdCliente.setText("");
+            txtNombreCliente.setText("");
+            txtApellidoCliente.setText("");
+            txtCodigoDetalle.setText(String.valueOf(obtenerSiguienteNumeroFactura())
+            );
+            txtIdProducto.setText("");
+            txtNombreProducto.setText("");
+            txtPrecioProducto.setText("");
+            spnCantidad.setValue(1);
+            txtImporteVenta.setText("0.00");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al guardar: "
+                    + e.getMessage());
+        }
 // Si después necesitas usar importe como double, usa la variable calculada, no la leas de txtImporte
 // Por ejemplo, para guardar en la base de datos:
 // ps.setDouble(5, importe);
 // Validaciones
-if (txtIdCliente.getText().isEmpty()) {
-JOptionPane.showMessageDialog(this, "Seleccione un cliente.");
-return;
-}
-if (modeloDetalle.getRowCount() == 0) {
-JOptionPane.showMessageDialog(this, "Agregue al menos un producto a la venta.");
-return;
-}
-try (Connection conn = ConexionMySQL_L.getConnection()) {
-conn.setAutoCommit(false); // Iniciar transacción
-int numeroFactura = obtenerSiguienteNumeroFactura(); // ya lo usas en txtCodigoFactura
-int idCliente = Integer.parseInt(txtIdCliente.getText());
-int idVendedor = vendedorActual.getId();
-double total = Double.parseDouble(txtTotalDetalle.getText());
+        if (txtIdCliente.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione un cliente.");
+            return;
+        }
+        if (modeloDetalle.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Agregue al menos un producto a la venta.");
+            return;
+        }
+        try (Connection conn = ConexionMySQL_L.getConnection()) {
+            conn.setAutoCommit(false); // Iniciar transacción
+            int numeroFactura = obtenerSiguienteNumeroFactura(); // ya lo usas en txtCodigoFactura
+            int idCliente = Integer.parseInt(txtIdCliente.getText());
+            int idVendedor = vendedorActual.getId();
+            double total = Double.parseDouble(txtTotalDetalle.getText());
 // 1. Insertar cabecera en table_facturas
-String sqlCab = "INSERT INTO table_detalle (id_detalle, cliente, fecha,vendedor, totals) VALUES (?, ?, ?, ?, ?)";
-try (PreparedStatement psCab = conn.prepareStatement(sqlCab)) {
-psCab.setInt(1, numeroFactura);
-psCab.setInt(2, idCliente);
-psCab.setString(3, txtFechaDetalle.getText());
-psCab.setInt(4, idVendedor);
-psCab.setDouble(5, total);
-psCab.executeUpdate();
-}
+            String sqlCab = "INSERT INTO table_detalle (id_detalle, cliente, fecha,vendedor, totals) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement psCab = conn.prepareStatement(sqlCab)) {
+                psCab.setInt(1, numeroFactura);
+                psCab.setInt(2, idCliente);
+                psCab.setString(3, txtFechaDetalle.getText());
+                psCab.setInt(4, idVendedor);
+                psCab.setDouble(5, total);
+                psCab.executeUpdate();
+            }
 // 2. Insertar detalles en table_ventas
-String sqlDet = "INSERT INTO table_ventas (id_detalle, Productos,cantidad, importe) VALUES (?, ?, ?, ?)";
-try (PreparedStatement psDet = conn.prepareStatement(sqlDet)) {
-for (int i = 0; i < modeloDetalle.getRowCount(); i++) {
-int idProducto = (int) modeloDetalle.getValueAt(i, 0);
-int cantidad = (int) modeloDetalle.getValueAt(i, 2);
-double importe = (double) modeloDetalle.getValueAt(i, 4);
-psDet.setInt(1, numeroFactura);
-psDet.setInt(2, idProducto);
-psDet.setInt(3, cantidad);
-psDet.setDouble(4, importe);
-psDet.addBatch();
-}
-psDet.executeBatch();
-}
-conn.commit(); // Confirmar transacción
-JOptionPane.showMessageDialog(this, "Factura N° " + numeroFactura
-+ " registrada exitosamente.");
+            String sqlDet = "INSERT INTO table_ventas (id_detalle, Productos,cantidad, importe) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement psDet = conn.prepareStatement(sqlDet)) {
+                for (int i = 0; i < modeloDetalle.getRowCount(); i++) {
+                    int idProducto = (int) modeloDetalle.getValueAt(i, 0);
+                    int cantidad = (int) modeloDetalle.getValueAt(i, 2);
+                    double importe = (double) modeloDetalle.getValueAt(i, 4);
+                    psDet.setInt(1, numeroFactura);
+                    psDet.setInt(2, idProducto);
+                    psDet.setInt(3, cantidad);
+                    psDet.setDouble(4, importe);
+                    psDet.addBatch();
+                }
+                psDet.executeBatch();
+            }
+            conn.commit(); // Confirmar transacción
+            JOptionPane.showMessageDialog(this, "Factura N° " + numeroFactura
+                    + " registrada exitosamente.");
 // Limpiar para una nueva venta
-modeloDetalle.setRowCount(0);
-totalDetalle = 0.0;
-txtTotalDetalle.setText("0.00");
+            modeloDetalle.setRowCount(0);
+            totalDetalle = 0.0;
+            txtTotalDetalle.setText("0.00");
 // Limpiar cliente (opcional, o mantenerlo)
-txtIdCliente.setText("");
-txtNombreCliente.setText("");
-txtApellidoCliente.setText("");
+            txtIdCliente.setText("");
+            txtNombreCliente.setText("");
+            txtApellidoCliente.setText("");
 // Generar nuevo número de factura para la siguiente venta
-txtCodigoDetalle.setText(String.valueOf(obtenerSiguienteNumeroFactura())
-);
+            txtCodigoDetalle.setText(String.valueOf(obtenerSiguienteNumeroFactura())
+            );
 // Limpiar producto
-txtIdProducto.setText("");
-txtNombreProducto.setText("");
-txtPrecioProducto.setText("");
-spnCantidad.setValue(1);
-txtImporteVenta.setText("0.00");
-} catch (Exception e) {
-e.printStackTrace();
-JOptionPane.showMessageDialog(this, "Error al guardar la venta: " +
-e.getMessage());
-}
+            txtIdProducto.setText("");
+            txtNombreProducto.setText("");
+            txtPrecioProducto.setText("");
+            spnCantidad.setValue(1);
+            txtImporteVenta.setText("0.00");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al guardar la venta: "
+                    + e.getMessage());
+        }
     }//GEN-LAST:event_btnRegistrarVentaActionPerformed
 
     private void txtTotalDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalDetalleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalDetalleActionPerformed
 
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        // TODO add your handling code here:
+
+        generarReportePDF();
+    }//GEN-LAST:event_btnReporteActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    } catch (ClassNotFoundException ex) {
-        java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-        java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-        java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        java.util.logging.Logger.getLogger(frmVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
+        //</editor-fold>
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new frmVentas().setVisible(true);
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new frmVentas().setVisible(true);
+            }
+        });
+    }
+    //PDF
+
+    private void generarReportePDF() {
+// Validar que haya al menos un producto en la tabla
+        if (modeloDetalle.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "No hay productos para generar el reporte.");
+return;
         }
-    });
-}
+// Obtener datos del formulario
+        String nroDetalle = txtCodigoDetalle.getText();
+        String fecha = txtFechaDetalle.getText();
+        String cliente = txtNombreCliente.getText() + " "
+                + txtApellidoCliente.getText();
+        String vendedor = lblVendedor.getText().replace("Vendedor: ", "");
+        String total = txtTotalDetalle.getText();
+// Diálogo para guardar archivo
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar reporte PDF");
+        fileChooser.setSelectedFile(new File("reporte_venta_" + nroDetalle + ".pdf"));
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            return; // Usuario canceló
+        }
+        File archivo = fileChooser.getSelectedFile();
+        String ruta = archivo.getAbsolutePath();
+        if (!ruta.toLowerCase().endsWith(".pdf")) {
+            ruta += ".pdf";
+        }
+// Crear el documento PDF
+        Document documento = new Document();
+        try {
+            PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+            documento.open();
+// Título
+            Paragraph titulo = new Paragraph("REPORTE DE VENTA");
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            documento.add(titulo);
+            documento.add(Chunk.NEWLINE);
+// Información de la venta (tabla de datos)
+            PdfPTable infoTable = new PdfPTable(2);
+            infoTable.setWidthPercentage(100);
+            infoTable.setSpacingBefore(10);
+            infoTable.setSpacingAfter(10);
+            agregarCelda(infoTable, "N° Detalle:", nroDetalle);
+            agregarCelda(infoTable, "Fecha:", fecha);
+            agregarCelda(infoTable, "Cliente:", cliente);
+            agregarCelda(infoTable, "Vendedor:", vendedor);
+            documento.add(infoTable);
+// Tabla de productos
+            PdfPTable productosTable = new PdfPTable(5);
+            productosTable.setWidthPercentage(100);
+            productosTable.setWidths(new float[]{1, 3, 1, 1, 1});
+            agregarCeldaHeader(productosTable, "Código");
+            agregarCeldaHeader(productosTable, "Producto");
+            agregarCeldaHeader(productosTable, "Cantidad");
+            agregarCeldaHeader(productosTable, "Precio");
+            agregarCeldaHeader(productosTable, "Importe");
+            for (int i = 0; i < modeloDetalle.getRowCount(); i++) {
+                productosTable.addCell(modeloDetalle.getValueAt(i, 0).toString());
+                productosTable.addCell(modeloDetalle.getValueAt(i, 1).toString());
+                productosTable.addCell(modeloDetalle.getValueAt(i, 2).toString());
+                productosTable.addCell(modeloDetalle.getValueAt(i, 3).toString());
+                productosTable.addCell(modeloDetalle.getValueAt(i, 4).toString());
+            }
+            documento.add(productosTable);
+// Total general
+            Paragraph totalPara = new Paragraph("TOTAL: S/ " + total);
+            totalPara.setAlignment(Element.ALIGN_RIGHT);
+            totalPara.setFont(FontFactory.getFont(FontFactory.HELVETICA_BOLD,
+                    14));
+            documento.add(totalPara);
+            documento.close();
+            JOptionPane.showMessageDialog(this, "PDF guardado exitosamente en:\n" + ruta);
+} catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al generar el PDF: "
+                    + e.getMessage());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarVenta;
     private javax.swing.JButton btnEliminarVenta;
     private javax.swing.JButton btnRegistrarVenta;
+    private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnVerProductos;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -784,4 +894,15 @@ e.getMessage());
     private javax.swing.JTextField txtPrecioProducto;
     private javax.swing.JTextField txtTotalDetalle;
     // End of variables declaration//GEN-END:variables
+
+    private void agregarCelda(PdfPTable table, String clave, String valor) {
+        table.addCell(new PdfPCell(new Phrase(clave, FontFactory.getFont(FontFactory.HELVETICA_BOLD))));
+        table.addCell(new PdfPCell(new Phrase(valor)));
+    }
+
+    private void agregarCeldaHeader(PdfPTable table, String header) {
+        PdfPCell cell = new PdfPCell(new Phrase(header, FontFactory.getFont(FontFactory.HELVETICA_BOLD)));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package com.mycompany.primera_unidad;
+package com.mycompany.uailogin.UaiLogin;
 
 import Vista_L.Login_frm;
 import javax.swing.SwingUtilities;
@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
  *
  * @author lusaavedra
  */
-public class Primera_unidad {
+public class UaiLogin {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
